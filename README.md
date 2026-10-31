@@ -40,7 +40,7 @@ ollama run llama3.2
 This opens an interactive chat prompt (`Send a message`). You can enter a test message there; type `/bye` to leave the prompt. Keep the Ollama app running.
 
 > **Note:** The website needs Ollama's background API, not the interactive prompt. If Ollama's background API is not running (for example, on a manual Linux setup), start it in a separate terminal and leave that terminal open:
-> 
+>
 > ```bash
 > ollama serve
 > ```
@@ -52,6 +52,20 @@ npm run dev
 ```
 
 The app runs at [http://localhost:3000](http://localhost:3000). No API key or `.env.local` entry is needed for local Ollama.
+
+### Deploying to Vercel
+
+Vercel cannot connect to Ollama running on your personal computer. In a deployment, `localhost` points to the Vercel function itself. Configure a network-accessible Ollama endpoint in **Vercel → Project → Settings → Environment Variables**, then redeploy:
+
+| Variable          | Value                                                                              |
+| ----------------- | ---------------------------------------------------------------------------------- |
+| `OLLAMA_BASE_URL` | Ollama server base URL. For Ollama Cloud, use `https://ollama.com`.                |
+| `OLLAMA_API_KEY`  | API key for the hosted Ollama endpoint. Do not use a `NEXT_PUBLIC_` prefix.        |
+| `OLLAMA_MODEL`    | Model ID available to that endpoint. Defaults to `llama3.2` for local development. |
+
+Ollama Cloud uses a model catalog and requires an API key; a locally pulled `llama3.2` model is not automatically available to the hosted endpoint. Select a model supported by the endpoint. See [Ollama API setup](https://docs.ollama.com/api/introduction) and [Cloud models](https://docs.ollama.com/cloud).
+
+For a self-hosted remote Ollama server, `OLLAMA_BASE_URL` must be reachable from Vercel over HTTPS. Do not expose an unauthenticated Ollama server to the public internet; put it behind authentication and TLS, and set `OLLAMA_API_KEY` if the endpoint accepts bearer authentication.
 
 Use `npm run build` for a production build, `npm run lint` for linting, and `npm test` for the Vitest suite.
 

@@ -24,10 +24,12 @@ export async function POST(req: Request) {
 
   const documents = searchKnowledgeBase(query).slice(0, 5);
   const ollama = createOllama({
+    baseURL: process.env.OLLAMA_BASE_URL ?? 'http://localhost:11434',
+    apiKey: process.env.OLLAMA_API_KEY,
     fetch: (input, init) => fetch(input, { ...init, signal: req.signal }),
   });
   const result = streamText({
-    model: ollama('llama3.2'),
+    model: ollama(process.env.OLLAMA_MODEL ?? 'llama3.2'),
     abortSignal: req.signal,
     system: `Ти — асистент з пошуку. Ось знайдені документи: ${JSON.stringify(documents)}. Користувач запитав: ${query}. Напиши коротке пояснення (2-3 речення), чому ці документи релевантні, і виділи ключові збіги. Якщо документів немає, чесно скажи про це та запропонуй звузити запит. Не вигадуй джерел.`,
     prompt: query,
