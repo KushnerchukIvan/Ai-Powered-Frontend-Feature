@@ -49,12 +49,12 @@ export function SearchResults({ items, isLoading, explanation, error }: SearchRe
         <div className="mb-4 flex items-center gap-2">
           <Sparkles className="h-4 w-4 text-accent" />
           <h2 className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">
-            Пояснення AI
+            Відповідь AI
           </h2>
         </div>
         <div className="min-h-48 rounded-2xl border border-line bg-[#f1f0ea] p-5 sm:p-7">
           <div className="mb-5 flex items-center gap-2 text-xs font-medium text-[#686a60]">
-            <BookOpen className="h-3.5 w-3.5" /> Семантичний огляд
+            <BookOpen className="h-3.5 w-3.5" /> Відповідь на запит
           </div>
           {error ? (
             <p role="alert" className="text-sm leading-relaxed text-[#984d3c]">
@@ -74,7 +74,7 @@ export function SearchResults({ items, isLoading, explanation, error }: SearchRe
           )}
         </div>
         <p className="mt-3 text-[11px] leading-relaxed text-muted">
-          AI узагальнює результати з локальної бази знань.
+          AI використовує локальні матеріали та знання моделі.
         </p>
       </aside>
     </section>
