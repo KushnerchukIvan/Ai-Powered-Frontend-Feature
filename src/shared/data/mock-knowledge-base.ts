@@ -8,10 +8,10 @@ export interface KnowledgeItem {
 export const mockKnowledgeBase: KnowledgeItem[] = [
   {
     id: 'react-rendering',
-    title: 'Understanding React rendering',
+    title: 'React is a UI library, not a full framework',
     content:
-      'How React schedules renders, reconciles the virtual DOM, and commits updates efficiently.',
-    tags: ['react', 'rendering'],
+      'React is a JavaScript library for building user interfaces. It focuses on composing UI from components and does not include a complete application framework with built-in routing, data fetching, or server rendering; teams add tools for those needs or choose a framework such as Next.js.',
+    tags: ['react', 'library', 'framework', 'rendering'],
   },
   {
     id: 'usememo',
@@ -140,17 +140,77 @@ export const mockKnowledgeBase: KnowledgeItem[] = [
 ];
 
 export function searchKnowledgeBase(query: string): KnowledgeItem[] {
-  const normalizedQuery = query.trim().toLocaleLowerCase();
+  const normalizedQuery = normalizeSearchText(query);
   if (!normalizedQuery) return [];
-  const terms = normalizedQuery.split(/\s+/).filter((term) => term.length > 2);
-  const matches = mockKnowledgeBase.filter(
-    (item) =>
-      item.title.toLocaleLowerCase().includes(normalizedQuery) ||
-      item.content.toLocaleLowerCase().includes(normalizedQuery) ||
-      item.tags.some((tag) => tag.includes(normalizedQuery)) ||
-      terms.some((term) =>
-        `${item.title} ${item.content} ${item.tags.join(' ')}`.toLocaleLowerCase().includes(term),
-      ),
-  );
-  return matches.slice(0, 5);
+  const stopWords = new Set([
+    'a',
+    'an',
+    'and',
+    'are',
+    'between',
+    'does',
+    'for',
+    'in',
+    'is',
+    'it',
+    'not',
+    'of',
+    'or',
+    'the',
+    'to',
+    'vs',
+    'why',
+    'в',
+    'для',
+    'є',
+    'з',
+    'і',
+    'не',
+    'на',
+    'чи',
+    'що',
+    'це',
+    'чому',
+  ]);
+  const terms = normalizedQuery
+    .split(' ')
+    .filter((term) => term.length > 1 && !stopWords.has(term));
+  if (terms.length === 0) return [];
+
+  return mockKnowledgeBase
+    .map((item, index) => {
+      const title = normalizeSearchText(item.title);
+      const content = normalizeSearchText(item.content);
+      const tags = normalizeSearchText(item.tags.join(' '));
+      const score = terms.reduce(
+        (total, term) =>
+          total +
+          (title.split(' ').includes(term) ? 5 : 0) +
+          (tags.split(' ').includes(term) ? 4 : 0) +
+          (content.split(' ').includes(term) ? 2 : 0),
+        0,
+      );
+      return { item, index, score };
+    })
+    .filter(({ score }) => score > 0)
+    .sort((a, b) => b.score - a.score || a.index - b.index)
+    .slice(0, 5)
+    .map(({ item }) => item);
+}
+
+function normalizeSearchText(value: string): string {
+  return value
+    .normalize('NFKC')
+    .toLocaleLowerCase()
+    .replace(/реакт[\p{L}]*/gu, 'react')
+    .replace(/фреймворк[\p{L}]*/gu, 'framework')
+    .replace(/бібліотек[\p{L}]*/gu, 'library')
+    .replace(/продуктивн[\p{L}]*/gu, 'performance')
+    .replace(/швидкоді[\p{L}]*/gu, 'performance')
+    .replace(/оптимізац[\p{L}]*/gu, 'performance')
+    .replace(/хуки|хук[\p{L}]*/gu, 'hooks')
+    .replace(/frameworks?/g, 'framework')
+    .replace(/[^\p{L}\p{N}+#]+/gu, ' ')
+    .trim()
+    .replace(/\s+/g, ' ');
 }
