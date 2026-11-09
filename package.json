@@ -12,9 +12,9 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
+    "@ai-sdk/groq": "^2.0.62",
     "@ai-sdk/react": "^2.0.0",
     "ai": "^5.0.0",
-    "ai-sdk-ollama": "2.2.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.468.0",
     "next": "^15.5.9",
