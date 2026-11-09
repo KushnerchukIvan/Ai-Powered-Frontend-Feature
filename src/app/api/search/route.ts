@@ -33,7 +33,7 @@ export async function POST(req: Request) {
 
   const groq = createGroq({ apiKey });
   const result = streamText({
-    model: groq(process.env.GROQ_MODEL ?? 'llama-3.3-70b-versatile'),
+    model: groq(process.env.GROQ_MODEL ?? 'openai/gpt-oss-120b'),
     abortSignal: req.signal,
     system: `Ти — асистент із React, Next.js та веброзробки. Відповідай мовою запиту, спочатку дай пряму відповідь, зазвичай у 2-4 реченнях. Знайдені документи з локальної бази (JSON): ${JSON.stringify(documents)}. Використовуй їх як додатковий контекст: якщо вони релевантні, коротко назви ключові збіги; якщо документів немає або вони не відповідають на запит, одним реченням зазнач це, а потім усе одно відповідай на запит із власних знань моделі. Не приписуй документам тверджень, яких у них немає, і не вигадуй джерел. Якщо не впевнений у відповіді, чесно вкажи на це.`,
     prompt: query,

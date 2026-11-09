@@ -16,7 +16,7 @@ Create an API key in the [Groq Console](https://console.groq.com/keys), then cre
 
 ```env
 GROQ_API_KEY=your_groq_api_key
-GROQ_MODEL=llama-3.3-70b-versatile
+GROQ_MODEL=openai/gpt-oss-120b
 ```
 
 Keep the key private: do not add a `NEXT_PUBLIC_` prefix or commit `.env.local`.
@@ -38,7 +38,7 @@ In **Vercel → Project → Settings → Environment Variables**, add these vari
 | Variable       | Value                         |
 | -------------- | ----------------------------- |
 | `GROQ_API_KEY` | Your secret key from Groq     |
-| `GROQ_MODEL`   | `llama-3.3-70b-versatile`     |
+| `GROQ_MODEL`   | `openai/gpt-oss-120b`         |
 
 Use `npm run build` for a production build, `npm run lint` for linting, and `npm test` for the Vitest suite.
 
